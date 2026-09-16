@@ -1,7 +1,9 @@
 import 'package:aullet/viewmodel/auth_view_model.dart';
+import 'package:aullet/viewmodel/profile_viewmodel.dart';
 import 'package:aullet/views/auth/login_page.dart';
 import 'package:aullet/views/auth/sign_up_page.dart';
 import 'package:aullet/views/home_view.dart';
+import 'package:aullet/views/profile_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
@@ -36,17 +38,22 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: [ChangeNotifierProvider(create: (_) => AuthViewModel())],
+      providers: [
+        ChangeNotifierProvider(create: (_) => AuthViewModel()),
+        ChangeNotifierProvider(create: (_) => ProfileViewmodel()),
+      ],
       child: Consumer<AuthViewModel>(
         builder: (context, authVM, _) {
           return MaterialApp(
             title: 'Aullet',
             theme: ThemeData(useMaterial3: true),
+            debugShowCheckedModeBanner: false,
             home: authVM.isLoggedIn ? const HomeView() : const LoginPage(),
             routes: {
               '/login': (_) => const LoginPage(),
               '/signup': (_) => const SignUpPage(),
               '/home': (_) => const HomeView(),
+              '/profile': (_) => const ProfilePage(),
             },
           );
         },
