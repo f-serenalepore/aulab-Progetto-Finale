@@ -42,7 +42,6 @@ class ProfileRepository {
   Future<String> uploadImage(String imagePath, String userId) async {
     // Creiamo un percorso univoco per l'immagine
     final filePath = '$userId/avatar.jpg';
-
     await _client
         .storage //accedo a Supabase Storage
         .from('image') //seleziono bucket 'image'
@@ -53,12 +52,9 @@ class ProfileRepository {
             upsert: true, // permette di sostituire il file
           ),
         );
-
     final imageUrl = _client.storage.from('image').getPublicUrl(filePath);
-
     // Aggiungiamo un parametro per evitare la cache
     final uniqueUrl = '$imageUrl?v=${DateTime.now().millisecondsSinceEpoch}';
-
     return uniqueUrl; //restituisce url immagine
   }
 }

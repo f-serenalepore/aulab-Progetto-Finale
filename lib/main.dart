@@ -1,4 +1,5 @@
 import 'package:aullet/viewmodel/auth_view_model.dart';
+import 'package:aullet/viewmodel/category_view_model.dart';
 import 'package:aullet/viewmodel/profile_view_model.dart';
 import 'package:aullet/views/auth/login_page.dart';
 import 'package:aullet/views/auth/sign_up_page.dart';
@@ -41,6 +42,7 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (_) => AuthViewModel()),
         ChangeNotifierProvider(create: (_) => ProfileViewModel()),
+        ChangeNotifierProvider(create: (_) => CategoryViewModel())
       ],
       child: Consumer<AuthViewModel>(
         builder: (context, authVM, _) {

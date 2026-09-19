@@ -73,14 +73,11 @@ class ProfileViewModel extends ChangeNotifier {
     final image = await _picker.pickImage(source: ImageSource.gallery);
     //caso in cui l'utente non seleziona alcuna immagine
     if (image == null) return;
-
     _setLoading(true);
-
     try {
       //recupero l'utente attuale da Supabase e salvo il suo profilo in _profile
       final user = Supabase.instance.client.auth.currentUser!;
       _profile = await _repo.fetchProfile(user.id);
-
       // Se per qualche motivo il profilo non esiste, non possiamo aggiornare l'avatar
       if (_profile == null) return;
 
