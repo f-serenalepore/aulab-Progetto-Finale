@@ -11,7 +11,7 @@ class CategoryViewModel extends ChangeNotifier{
 
   List<Category> get categories => _categories;
   bool get isLoading => _isLoading;
-  String? get ErrorMessage => _error;
+  String? get errorMessage => _error;
 
   //carica le categorie dal repository
   Future<void> loadCategories() async {
