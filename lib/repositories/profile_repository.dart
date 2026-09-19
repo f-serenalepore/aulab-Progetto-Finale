@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:aullet/models/profile.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -34,5 +36,29 @@ class ProfileRepository {
         .from('profiles')
         .update(profile.toMap())
         .eq('user_id', profile.userId);
+  }
+
+  //carica file nel bucket 'image'
+  Future<String> uploadImage(String imagePath, String userId) async {
+    // Creiamo un percorso univoco per l'immagine
+    final filePath = '$userId/avatar.jpg';
+
+    await _client
+        .storage //accedo a Supabase Storage
+        .from('image') //seleziono bucket 'image'
+        .upload(
+          filePath,
+          File(imagePath), //trasforma il path locale in un file
+          fileOptions: const FileOptions(
+            upsert: true, // permette di sostituire il file
+          ),
+        );
+
+    final imageUrl = _client.storage.from('image').getPublicUrl(filePath);
+
+    // Aggiungiamo un parametro per evitare la cache
+    final uniqueUrl = '$imageUrl?v=${DateTime.now().millisecondsSinceEpoch}';
+
+    return uniqueUrl; //restituisce url immagine
   }
 }

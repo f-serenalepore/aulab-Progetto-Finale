@@ -2,9 +2,11 @@ import 'package:aullet/models/profile.dart';
 import 'package:aullet/repositories/profile_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:image_picker/image_picker.dart';
 
-class ProfileViewmodel extends ChangeNotifier {
+class ProfileViewModel extends ChangeNotifier {
   final _repo = ProfileRepository();
+  final _picker = ImagePicker();
   Profile? _profile;
   bool _isLoading = false;
   String? _error;
@@ -66,7 +68,34 @@ class ProfileViewmodel extends ChangeNotifier {
     }
   }
 
-  Future<void> pickAndUploadAvatar() async {
-    return;
+  Future<void> pickAndUploadAvatar(String userId) async {
+    //l'utente seleziona l'immagine dalla galleria del telefono
+    final image = await _picker.pickImage(source: ImageSource.gallery);
+    //caso in cui l'utente non seleziona alcuna immagine
+    if (image == null) return;
+
+    _setLoading(true);
+
+    try {
+      //recupero l'utente attuale da Supabase e salvo il suo profilo in _profile
+      final user = Supabase.instance.client.auth.currentUser!;
+      _profile = await _repo.fetchProfile(user.id);
+
+      // Se per qualche motivo il profilo non esiste, non possiamo aggiornare l'avatar
+      if (_profile == null) return;
+
+      //upload su Storage con return url immagine caricata
+      final imageUrl = await _repo.uploadImage(image.path, user.id);
+
+      //aggiorno i dati dell'oggetto _profile
+      _profile!.avatarUrl = imageUrl;
+
+      //Aggiorno il profilo nel database
+      await _repo.updateProfile(_profile!);
+    } catch (e) {
+      _error = e.toString();
+    } finally {
+      _setLoading(false);
+    }
   }
 }
