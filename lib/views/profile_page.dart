@@ -1,4 +1,6 @@
+import 'package:aullet/viewmodel/auth_view_model.dart';
 import 'package:aullet/viewmodel/profile_view_model.dart';
+import 'package:aullet/views/auth/login_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -57,6 +59,7 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     final vm = context.watch<ProfileViewModel>();
+    final authVM = context.read<AuthViewModel>();
 
     return Scaffold(
       appBar: AppBar(
@@ -67,6 +70,21 @@ class _ProfilePageState extends State<ProfilePage> {
             Navigator.pushReplacementNamed(context, '/home');
           },
         ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.logout),
+            tooltip: 'Logout',
+            onPressed: () async {
+              await authVM.logout();
+              //Dopo il logout, sostituisci la route con LoginPage
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (_) => const LoginPage()),
+                (route) => false,
+              );
+            },
+          ),
+        ],
       ),
       body: vm.isLoading
           ? const Center(child: CircularProgressIndicator())
