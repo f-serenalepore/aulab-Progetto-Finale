@@ -20,4 +20,14 @@ class ExpenseRepository {
         .map((m) => Expense.fromMap(m as Map<String, dynamic>))
         .toList();
   }
+
+  //aggiorna la spesa
+  Future<void> updateExpense(Expense exp) async {
+    await _client.from('expenses').update(exp.toMap()).eq('id', exp.id);
+  }
+
+  //elimina la spesa
+  Future<void> deleteExpense(String id) async {
+    await _client.from('expenses').delete().eq('id', id);
+  }
 }

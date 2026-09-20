@@ -8,34 +8,62 @@ class ExpenseViewModel extends ChangeNotifier {
 
   List<Expense> _expense = [];
   bool _isLoading = false;
-  String? _error;
+  String? _errorMessage;
 
   List<Expense> get expense => _expense;
   bool get isLoading => _isLoading;
-  String? get errorMessage => _error;
+  String? get errorMessage => _errorMessage;
+
+  void _setLoading(bool v) {
+    _isLoading = v;
+    if (v) _errorMessage = null;
+    notifyListeners();
+  }
 
   //carica le spese dal repository
   Future<void> loadExpenses() async {
     _setLoading(true);
-
+    _errorMessage = null;
     try {
       final user = Supabase.instance.client.auth.currentUser;
-
-      if (user == null) {
-        _error = 'Utente non autenticato';
-        return;
-      }
+      if (user == null) throw Exception('Utente non autenticato');
       _expense = await _expenseRepo.fetchExpenses(user.id);
     } catch (e) {
-      _error = e.toString();
+      _errorMessage = e.toString();
     } finally {
       _setLoading(false);
     }
   }
 
-  void _setLoading(bool v) {
-    _isLoading = v;
-    if (v) _error = null;
-    notifyListeners();
+  //Metodo per aggiornare la spesa
+  Future<void> updateExpense(Expense exp) async {
+    _setLoading(true);
+    _errorMessage = null;
+    try {
+      final user = Supabase.instance.client.auth.currentUser;
+      if (user == null) throw Exception('Utente non autenticato');
+      await _expenseRepo.updateExpense(exp);
+      _expense = await _expenseRepo.fetchExpenses(user.id);
+    } catch (e) {
+      _errorMessage = e.toString();
+    } finally {
+      _setLoading(false);
+    }
+  }
+
+  //Metodo per cancellare la spesa
+  Future<void> deleteExpense(String id) async {
+    _setLoading(true);
+    _errorMessage = null;
+    try {
+      final user = Supabase.instance.client.auth.currentUser;
+      if (user == null) throw Exception('Utente non autenticato');
+      await _expenseRepo.deleteExpense(id);
+      _expense = await _expenseRepo.fetchExpenses(user.id);
+    } catch (e) {
+      _errorMessage = e.toString();
+    } finally {
+      _setLoading(false);
+    }
   }
 }

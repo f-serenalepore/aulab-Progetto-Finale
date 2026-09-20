@@ -21,7 +21,7 @@ class Expense {
     categoryId: map['category_id'] as String,
     amount: (map['amount'] as num).toDouble(),
     date: DateTime.parse(map['date'] as String),
-    description: map['description'] as String?
+    description: map['description'] as String?,
   );
 
   Map<String, dynamic> toMap() => {
@@ -29,6 +29,6 @@ class Expense {
     'category_id': categoryId,
     'amount': amount,
     'date': date.toIso8601String(),
-    'description': description
+    'description': description,
   };
 }
