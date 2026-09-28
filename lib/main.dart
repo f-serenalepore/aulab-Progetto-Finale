@@ -2,10 +2,12 @@ import 'package:aullet/viewmodel/auth_view_model.dart';
 import 'package:aullet/viewmodel/category_view_model.dart';
 import 'package:aullet/viewmodel/expense_view_model.dart';
 import 'package:aullet/viewmodel/profile_view_model.dart';
+import 'package:aullet/viewmodel/statistics_view_model.dart';
 import 'package:aullet/views/auth/login_page.dart';
 import 'package:aullet/views/auth/sign_up_page.dart';
 import 'package:aullet/views/home_view.dart';
 import 'package:aullet/views/profile_page.dart';
+import 'package:aullet/views/statics/statistics_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
@@ -45,6 +47,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => ProfileViewModel()),
         ChangeNotifierProvider(create: (_) => CategoryViewModel()),
         ChangeNotifierProvider(create: (_) => ExpenseViewModel()),
+        ChangeNotifierProvider(create: (_) => StatisticsViewModel()),
       ],
       child: Consumer<AuthViewModel>(
         builder: (context, authVM, _) {
@@ -58,6 +61,7 @@ class MyApp extends StatelessWidget {
               '/signup': (_) => const SignUpPage(),
               '/home': (_) => const HomeView(),
               '/profile': (_) => const ProfilePage(),
+              '/statistics': (_) => const StatisticsPage()
             },
           );
         },

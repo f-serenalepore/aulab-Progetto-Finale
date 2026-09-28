@@ -25,54 +25,50 @@ class _HomeViewState extends State<HomeView> {
     });
   }
 
-Future<void> _editExpense(Expense exp) async {
-  await Navigator.push(
-    context,
-    MaterialPageRoute(
-      builder: (_) => EditExpensePage(expense: exp),
-    ),
-  );
+  Future<void> _editExpense(Expense exp) async {
+    await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => EditExpensePage(expense: exp)),
+    );
 
-  if (!mounted) return;
+    if (!mounted) return;
 
-  await context.read<ExpenseViewModel>().loadExpenses();
-}
+    await context.read<ExpenseViewModel>().loadExpenses();
+  }
 
-Future<void> _deleteExpense(Expense exp) async {
-  final expenseVM = context.read<ExpenseViewModel>();
+  Future<void> _deleteExpense(Expense exp) async {
+    final expenseVM = context.read<ExpenseViewModel>();
 
-  final confirmed = await showDialog<bool>(
-    context: context,
-    builder: (context) => AlertDialog(
-      title: const Text('Elimina spesa'),
-      content: const Text(
-        'Sei sicura di voler eliminare questa spesa?',
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Elimina spesa'),
+        content: const Text('Sei sicura di voler eliminare questa spesa?'),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context, false);
+            },
+            child: const Text('Annulla'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pop(context, true);
+            },
+            child: const Text('Elimina'),
+          ),
+        ],
       ),
-      actions: [
-        TextButton(
-          onPressed: () {
-            Navigator.pop(context, false);
-          },
-          child: const Text('Annulla'),
-        ),
-        ElevatedButton(
-          onPressed: () {
-            Navigator.pop(context, true);
-          },
-          child: const Text('Elimina'),
-        ),
-      ],
-    ),
-  );
+    );
 
-  if (confirmed != true) return;
+    if (confirmed != true) return;
 
-  await expenseVM.deleteExpense(exp.id!);
+    await expenseVM.deleteExpense(exp.id!);
 
-  if (!mounted) return;
+    if (!mounted) return;
 
-  await expenseVM.loadExpenses();
-}
+    await expenseVM.loadExpenses();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -96,6 +92,10 @@ Future<void> _deleteExpense(Expense exp) async {
                 Navigator.pushNamed(context, '/profile');
               },
               icon: const Icon(Icons.person),
+            ),
+            IconButton(
+              onPressed: () => Navigator.pushNamed(context, '/statistics'),
+              icon: const Icon(Icons.bar_chart),
             ),
           ],
         ),
@@ -182,14 +182,14 @@ Future<void> _deleteExpense(Expense exp) async {
             trailing: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-IconButton(
-  onPressed: () => _editExpense(exp),
-  icon: const Icon(Icons.edit),
-),
-IconButton(
-  onPressed: () => _deleteExpense(exp),
-  icon: const Icon(Icons.delete),
-),
+                IconButton(
+                  onPressed: () => _editExpense(exp),
+                  icon: const Icon(Icons.edit),
+                ),
+                IconButton(
+                  onPressed: () => _deleteExpense(exp),
+                  icon: const Icon(Icons.delete),
+                ),
               ],
             ),
           );
