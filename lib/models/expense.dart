@@ -1,5 +1,5 @@
 class Expense {
-  final String id;
+  final String? id;
   final String userId;
   final String categoryId;
   final double amount;
@@ -7,7 +7,7 @@ class Expense {
   String? description;
 
   Expense({
-    required this.id,
+    this.id,
     required this.userId,
     required this.categoryId,
     required this.amount,

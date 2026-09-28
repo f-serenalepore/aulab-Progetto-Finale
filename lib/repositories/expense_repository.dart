@@ -23,7 +23,7 @@ class ExpenseRepository {
 
   //aggiorna la spesa
   Future<void> updateExpense(Expense exp) async {
-    await _client.from('expenses').update(exp.toMap()).eq('id', exp.id);
+    await _client.from('expenses').update(exp.toMap()).eq('id', exp.id!);
   }
 
   //elimina la spesa
